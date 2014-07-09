@@ -72,6 +72,7 @@
             App.vent.on('stream:ready', _.bind(this.showPlayer, this));
             App.vent.on('player:close', _.bind(this.showViews, this));
             App.vent.on('player:close', _.bind(this.Player.close, this.Player));
+            App.vent.on('player:minimize', _.bind(this.showViews, this));
         },
 
         onShow: function() {
@@ -84,12 +85,12 @@
             this.Content.show(new App.View.InitModal());
             App.db.initialize(function() {
 
+                // Always on top
+                win.setAlwaysOnTop(App.settings.alwaysOnTop);
+
                 // we check if the disclaimer is accepted
-
-                if( ! AdvSettings.get('disclaimerAccepted') ) {
-
+                if (!AdvSettings.get('disclaimerAccepted')) {
                     that.showDisclaimer();
-
                 }
 
                 that.InitModal.close();
@@ -101,11 +102,12 @@
             });
 
             // Cancel all new windows (Middle clicks / New Tab)
-            this.nativeWindow.on('new-win-policy', function (frame, url, policy) {
+            this.nativeWindow.on('new-win-policy', function(frame, url, policy) {
                 policy.ignore();
             });
 
             App.vent.trigger('main:ready');
+
         },
 
         showMovies: function(e) {
@@ -127,10 +129,10 @@
             App.vent.trigger('show:closeDetail');
             this.Content.show(new App.View.InitModal());
             App.db.syncDB(function() {
-                    that.InitModal.close();
-                    that.showShows();
-                    // Focus the window when the app opens
-                    that.nativeWindow.focus();
+                that.InitModal.close();
+                that.showShows();
+                // Focus the window when the app opens
+                that.nativeWindow.focus();
 
             });
         },
@@ -140,17 +142,17 @@
             var that = this;
             App.vent.trigger('settings:close');
             this.Content.show(new App.View.InitModal());
-            App.db.initDB(function(err,data) {
-                    that.InitModal.close();
+            App.db.initDB(function(err, data) {
+                that.InitModal.close();
 
-                    if (!err) {
-                        // we write our new update time
-                        AdvSettings.set('tvshow_last_sync', +new Date());
-                    }
+                if (!err) {
+                    // we write our new update time
+                    AdvSettings.set('tvshow_last_sync', +new Date());
+                }
 
-                    App.vent.trigger('shows:list');
-                    // Focus the window when the app opens
-                    that.nativeWindow.focus();
+                App.vent.trigger('shows:list');
+                // Focus the window when the app opens
+                that.nativeWindow.focus();
 
             });
         },
@@ -175,10 +177,9 @@
         },
 
         toggleHelp: function(e) {
-            if($('.help-container').length > 0) {
+            if ($('.help-container').length > 0) {
                 App.vent.trigger('help:close');
-            }
-            else {
+            } else {
                 this.showHelp();
             }
         },
@@ -244,7 +245,7 @@
                 model: streamModel
             }));
             this.Content.$el.hide();
-            if(this.MovieDetail.$el !== undefined) {
+            if (this.MovieDetail.$el !== undefined) {
                 this.MovieDetail.$el.hide();
             }
         },
@@ -252,7 +253,7 @@
         showViews: function(streamModel) {
 
             this.Content.$el.show();
-            if(this.MovieDetail.$el !== undefined) {
+            if (this.MovieDetail.$el !== undefined) {
                 this.MovieDetail.$el.show();
             }
             $(window).trigger('resize');

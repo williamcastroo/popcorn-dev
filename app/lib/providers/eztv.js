@@ -44,7 +44,7 @@
                 win.error('API error:', err);
                 deferred.reject(err);
             } else {
-                deferred.resolve(data || []);
+                deferred.resolve({results: data, hasMore: true});
             }
         });
 
@@ -54,6 +54,7 @@
     // Single element query
     var queryTorrent = function(torrent_id, callback) {
         var url = AdvSettings.get('tvshowApiEndpoint') + 'show/' + torrent_id;
+        
         win.info('Request to EZTV API');
         win.debug(url);
         request({url: url, json: true}, function(error, response, data) {
@@ -77,7 +78,7 @@
     };
 
     Eztv.prototype.extractIds = function(items) {
-        return _.pluck(items, 'imdb_id');
+        return _.pluck(items.results, 'imdb_id');
     };
 
     Eztv.prototype.fetch = function(filters) {

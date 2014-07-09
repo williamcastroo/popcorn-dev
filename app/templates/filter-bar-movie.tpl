@@ -33,7 +33,7 @@
 
             <form><input id="searchbox" type="text" placeholder="<%= i18n.__(" Search") %>"></form>
         </div>
-        <!-- Will -->
+        <!-- Magnet Link -->
         <div class="right magnet">
             <span class="remove-magnet"><span class="text-magnet"></span></span>
 

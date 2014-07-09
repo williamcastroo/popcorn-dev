@@ -1,4 +1,4 @@
-(function (App) {
+(function(App) {
     'use strict';
 
     var resizeImage = App.Providers.Trakttv.resizeImage;
@@ -25,9 +25,9 @@
             'click #switch-hd-off': 'disableHD'
         },
 
-        initialize: function () {
+        initialize: function() {
             _this = this;
-            Mousetrap.bind('esc', function (e) {
+            Mousetrap.bind('esc', function(e) {
                 _this.closeDetails(e);
             });
             App.vent.on('shows:watched', this.markWatched);
@@ -39,13 +39,13 @@
                 images.poster = resizeImage(images.poster, '300');
             }
 
-            App.vent.on('shortcuts:show', function () {
+            App.vent.on('shortcuts:show', function() {
                 _this.initKeyboardShortcuts();
             });
             _this.initKeyboardShortcuts();
         },
 
-        initKeyboardShortcuts: function () {
+        initKeyboardShortcuts: function() {
             Mousetrap.bind('backspace', _this.closeDetails);
 
             Mousetrap.bind('up', _this.previousEpisode);
@@ -63,7 +63,7 @@
             Mousetrap.bind('w', _this.toggleEpisodeWatched);
         },
 
-        unbindKeyboardShortcuts: function () { // There should be a better way to do this
+        unbindKeyboardShortcuts: function() { // There should be a better way to do this
             Mousetrap.unbind('backspace');
 
             Mousetrap.unbind('up');
@@ -81,29 +81,45 @@
             Mousetrap.unbind('w');
         },
 
-        onShow: function () {
+        onShow: function() {
 
             this.selectSeason($('.tab-season:first'));
             $('.star-container-tv').tooltip();
 
+
+
+            var cbackground = $('.tv-cover').attr('data-bgr');
+            var coverCache = new Image();
+            coverCache.src = cbackground;
+            coverCache.onload = function() {
+                $('.tv-cover')
+                    .css('background-image', 'url(' + cbackground + ')')
+                    .css('opacity', '1');
+                coverCache = null;
+
+
+
+            };
+
             var background = $('.tv-poster-background').attr('data-bgr');
             var bgCache = new Image();
             bgCache.src = background;
-            bgCache.onload = function () {
+            bgCache.onload = function() {
                 $('.tv-poster-background')
                     .css('background-image', 'url(' + background + ')')
-                    .fadeIn(300);
+                    .css('opacity', '1');
                 bgCache = null;
             };
 
+
             // we'll mark episode already watched
-            Database.getEpisodesWatched(this.model.get('tvdb_id'), function (err, data) {
+            Database.getEpisodesWatched(this.model.get('tvdb_id'), function(err, data) {
                 _.each(data, _this.markWatched);
             });
 
         },
 
-        toggleWatched: function (e) {
+        toggleWatched: function(e) {
             var edata = e.currentTarget.id.split('-');
             var value = {
                 show_id: _this.model.get('tvdb_id'),
@@ -112,17 +128,17 @@
                 from_browser: true
             };
 
-            Database.checkEpisodeWatched(value, function (watched, data) {
+            Database.checkEpisodeWatched(value, function(watched, data) {
                 if (watched) {
-                    App.vent.trigger('shows:unwatched', value);
+                    App.vent.trigger('shows:unwatched', value, true);
                 } else {
-                    App.vent.trigger('shows:watched', value);
+                    App.vent.trigger('shows:watched', value, true);
                 }
                 _this.markWatched(value, !watched);
             });
         },
 
-        markWatched: function (value, state) {
+        markWatched: function(value, state) {
             state = (state === undefined) ? true : state;
             // we should never get any shows that aren't us, but you know, just in case.
             if (value.show_id === _this.model.get('tvdb_id')) {
@@ -132,7 +148,7 @@
             }
         },
 
-        startStreaming: function (e) {
+        startStreaming: function(e) {
             e.preventDefault();
             var that = this;
             var title = that.model.get('title');
@@ -163,34 +179,33 @@
                 extract_subtitle: epInfo,
                 defaultSubtitle: Settings.subtitle_language
             });
-            console.log(torrentStart);
             _this.unbindKeyboardShortcuts();
             App.vent.trigger('stream:start', torrentStart);
         },
 
-        closeDetails: function (e) {
+        closeDetails: function(e) {
             e.preventDefault();
             _this.unbindKeyboardShortcuts();
             App.vent.trigger('show:closeDetail');
         },
 
-        clickSeason: function (e) {
+        clickSeason: function(e) {
             e.preventDefault();
             this.selectSeason($(e.currentTarget));
         },
 
-        clickEpisode: function (e) {
+        clickEpisode: function(e) {
             e.preventDefault();
             this.selectEpisode($(e.currentTarget));
         },
 
-        dblclickEpisode: function (e) {
+        dblclickEpisode: function(e) {
             e.preventDefault();
             this.selectEpisode($(e.currentTarget));
             $('.startStreaming').trigger('click');
         },
         // Helper Function
-        selectSeason: function ($elem) {
+        selectSeason: function($elem) {
             $('.tab-season.active').removeClass('active');
             $elem.addClass('active');
             $('.tab-episodes').hide();
@@ -200,9 +215,8 @@
             this.selectEpisode($('.tab-episodes.' + $elem.attr('data-tab') + ' li:first'));
         },
 
-        selectEpisode: function ($elem) {
+        selectEpisode: function($elem) {
             var tvdbid = $elem.attr('data-id');
-
             var torrents = {};
             torrents.q480 = $('.template-' + tvdbid + ' .q480').text();
             torrents.q720 = $('.template-' + tvdbid + ' .q720').text();
@@ -248,7 +262,7 @@
             this.ui.startStreaming.show();
         },
 
-        enableHD: function () {
+        enableHD: function() {
             win.info('HD Enabled');
             var tvdbid = $('.movie-btn-watch-episode').attr('data-episodeid'),
                 torrent = $('.template-' + tvdbid + ' .q720').text();
@@ -256,7 +270,7 @@
             win.debug(torrent);
         },
 
-        disableHD: function () {
+        disableHD: function() {
             win.info('HD Disabled');
             var tvdbid = $('.movie-btn-watch-episode').attr('data-episodeid'),
                 torrent = $('.template-' + tvdbid + ' .q480').text();
@@ -264,7 +278,7 @@
             win.debug(torrent);
         },
 
-        nextEpisode: function (e) {
+        nextEpisode: function(e) {
             var index = $('.tab-episode.active').index();
             if (index === $('.tab-episode:visible').length - 1) {
                 return;
@@ -279,7 +293,7 @@
 
         },
 
-        previousEpisode: function (e) {
+        previousEpisode: function(e) {
             var index = $('.tab-episode.active').index();
             if (index === 0) {
                 return;
@@ -294,7 +308,7 @@
 
         },
 
-        nextSeason: function (e) {
+        nextSeason: function(e) {
             var index = $('.tab-season.active').index();
             if (index === $('.tab-season').length - 1) {
                 return;
@@ -308,7 +322,7 @@
             e.stopPropagation();
         },
 
-        previousSeason: function (e) {
+        previousSeason: function(e) {
             var index = $('.tab-season.active').index();
             if (index === 0) {
                 return;
@@ -323,57 +337,52 @@
 
         },
 
-        playEpisode: function (e) {
+        playEpisode: function(e) {
             $('.startStreaming').trigger('click');
             e.preventDefault();
             e.stopPropagation();
         },
 
-        toggleQuality: function (e) {
+        toggleQuality: function(e) {
 
             if ($('.quality').is(':visible')) {
                 if ($('#switch-hd-off').is(':checked')) {
                     $('#switch-hd-on').trigger('click');
-                }
-                else {
+                } else {
                     $('#switch-hd-off').trigger('click');
                 }
             }
 
         },
 
-        toggleEpisodeWatched: function (e) {
+        toggleEpisodeWatched: function(e) {
             var data = {};
             data.currentTarget = $('.tab-episode.active span.watched')[0];
             _this.toggleWatched(data);
         },
 
 
-        isElementVisible: function (el) {
+        isElementVisible: function(el) {
             var eap,
                 rect = el.getBoundingClientRect(),
                 docEl = document.documentElement,
                 vWidth = window.innerWidth || docEl.clientWidth,
                 vHeight = window.innerHeight || docEl.clientHeight,
-                efp = function (x, y) {
+                efp = function(x, y) {
                     return document.elementFromPoint(x, y);
                 },
                 contains = 'contains' in el ? 'contains' : 'compareDocumentPosition',
                 has = contains === 'contains' ? 1 : 0x14;
 
             // Return false if it's not in the viewport
-            if (rect.right < 0 || rect.bottom < 0
-                || rect.left > vWidth || rect.top > vHeight) {
+            if (rect.right < 0 || rect.bottom < 0 || rect.left > vWidth || rect.top > vHeight) {
                 return false;
             }
 
             // Return true if any of its four corners are visible
             return (
-                (eap = efp(rect.left, rect.top)) === el || el[contains](eap) === has
-                    || (eap = efp(rect.right, rect.top)) === el || el[contains](eap) === has
-                    || (eap = efp(rect.right, rect.bottom)) === el || el[contains](eap) === has
-                    || (eap = efp(rect.left, rect.bottom)) === el || el[contains](eap) === has
-                );
+                (eap = efp(rect.left, rect.top)) === el || el[contains](eap) === has || (eap = efp(rect.right, rect.top)) === el || el[contains](eap) === has || (eap = efp(rect.right, rect.bottom)) === el || el[contains](eap) === has || (eap = efp(rect.left, rect.bottom)) === el || el[contains](eap) === has
+            );
         }
 
     });

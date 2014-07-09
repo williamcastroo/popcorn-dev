@@ -5,7 +5,7 @@
 
 <ul class="nav nav-hor right">
     <!-- TODO: Add active class -->
-    <li><!-- Will -->
+    <li><!-- Magnet link -->
         <div class="right magnet">
             <span class="remove-magnet"><span class="text-magnet"></span></span>
 

@@ -55,6 +55,7 @@
             connections: parseInt(Settings.connectionLimit, 10) || 100, // Max amount of peers to be connected to.
             dht: parseInt(Settings.dhtLimit, 10) || 50,
             port: parseInt(Settings.streamPort, 10) || 0, 
+            tmp: App.settings.tmpLocation,
             path: tmpFile, // we'll have a different file name for each stream also if it's same torrent in same session
             buffer: (1.5 * 1024 * 1024).toString(), // create a buffer on torrent-stream
             index: torrent.file_index
@@ -148,10 +149,10 @@
                     
                     var getSubtitles = function(data){
                         win.debug('Subtitle data request:', data);
+
+                        var subtitleProvider = App.Config.getProvider('tvshowsubtitle');
                         
-                        var subtitleProvider = new (App.Config.getProvider('tvshowsubtitle'))();
-                        
-                        subtitleProvider.query(data, function(subs) {
+                        subtitleProvider.fetch(data).then(function(subs) {
                             if (Object.keys(subs).length > 0) {
                                 subtitles = subs;
                                 win.info(Object.keys(subs).length + ' subtitles found');
@@ -160,6 +161,10 @@
                                 win.warn('No subtitles returned');
                             }
                             hasSubtitles = true;
+                        }).catch(function(err) {
+                            subtitles = null;
+                            hasSubtitles = true;
+                            win.warn(err);                          
                         });
                     };
                     
@@ -178,8 +183,7 @@
                             episode: model.get('episode'),
                             season: model.get('season'),
                             file_index: model.get('file_index'),
-                            imdb_id: model.get('imdb_id'),
-                            episodes: model.get('episodes')
+                            imdb_id: model.get('imdb_id')
                         };
 
                         handleTorrent(torrentInfo, stateModel);
@@ -207,6 +211,7 @@
                     var title = model.get('title');
                     if(!title) { //From ctrl+v magnet or drag torrent
                         for(var f in torrent.files) {
+                            torrent.files[f].index = f;
                             if(!torrent.files[f].name.endsWith('.avi') && 
                                 !torrent.files[f].name.endsWith('.mp4') && 
                                 !torrent.files[f].name.endsWith('.mkv')) {
@@ -262,14 +267,30 @@
                 }
             };
 
-            if(!torrent_read) {
+            if (torrentUrl.substring(0,7) === 'http://') {
+                return Streamer.startStream (model, torrentUrl, stateModel);
+            } else if(!torrent_read) {
                 readTorrent(torrentUrl, doTorrent);
             }
             else {
                 doTorrent(null, model.get('torrent'));
             }
 
-            
+
+        },
+        startStream: function (model, url, stateModel) {
+                var si = new App.Model.StreamInfo({});
+                si.set('title', url);
+                si.set('subtitle', {});
+                si.set('type', 'video/mp4');
+
+                // Test for Custom NW
+                //si.set('type', mime.lookup(url));
+                si.set('src', [
+                        { type: 'video/mp4',
+                          src: url }
+                ]);
+                App.vent.trigger('stream:ready', si);
         },
 
         stop: function() {

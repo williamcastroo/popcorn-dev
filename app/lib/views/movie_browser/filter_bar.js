@@ -5,13 +5,13 @@
         className: 'filter-bar',
         ui: {
             searchForm: '.search form',
-            search: '.search input',
-            magnet: '.magnet input',
-            magnetForm: '.magnet form',
-            magnetText: '.text-magnet',
+            searchInput: '.search input',
+            search: '.search',
             searchClose: '.remove-search',
             searchText: '.text-search',
-
+            magnet: '.magnet input',
+            magnetForm: '.magnet form',
+            magnetText: '.text-magnet',          
             sorterValue: '.sorters .value',
             genreValue: '.genres  .value'
         },
@@ -19,6 +19,7 @@
             'hover  @ui.search': 'focus',
             'submit @ui.searchForm': 'search',
             'click  @ui.searchClose': 'removeSearch',
+            'click  @ui.search': 'focusSearch',
             'hover  @ui.magnet': 'focus',
             'submit @ui.magnetForm': 'magnet',
             'click  @ui.magnetClose': 'removeMagnet',
@@ -51,9 +52,9 @@
             App.vent.trigger('about:close');
             App.vent.trigger('movie:closeDetail');
             e.preventDefault();
-            var searchvalue = this.ui.search.val();
+            var searchvalue = this.ui.searchInput.val();
             this.model.set({
-                keywords: this.ui.search.val(),
+                keywords: this.ui.searchInput.val(),
                 genre: ''
             });
             this.ui.search.blur();
@@ -63,7 +64,7 @@
                 this.ui.searchText.text();
             } else {
                 this.ui.searchClose.show();
-                this.ui.searchText.text(this.ui.search.val());
+                this.ui.searchText.text(this.ui.searchInput.val());
             }
         },
         removeSearch: function (e) {
@@ -75,13 +76,15 @@
                 genre: ''
             });
 
-            this.ui.search.val('');
+            this.ui.searchInput.val('');
             this.ui.searchClose.hide('slow');
             this.ui.searchText.text();
         },
 
         /*
-         Magnet by wiLL
+         Search magnet link
+		 Fix for paste event on Mac and Win
+		 @williamcastroo
          */
         focusMagnet: function () {
             this.$('.magnet input').focus();
@@ -108,7 +111,7 @@
             }
 
         },
-        /* Fim magnet */
+        /* End magnet */
 
         sortBy: function (e) {
             App.vent.trigger('about:close');
@@ -183,5 +186,6 @@
         template: '#filter-bar-movie-tpl',
         type: 'movies',
     });
+
 
 })(window.App);
