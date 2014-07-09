@@ -1,0 +1,475 @@
+.shows-container-contain
+	background-color #17181b
+	height 100%
+	width 100%
+	position fixed
+	padding-top: 40px
+
+.tv-container-close
+	position absolute
+	top 85px
+	right 30px
+	width 20px
+	height 20px
+	background-image url('../../images/icons/Close.png')
+	background-size 20px
+	cursor pointer
+	z-index 100
+	opacity 0.7
+	-webkit-backface-visibility hidden
+	transition all .5s
+
+	&:hover
+		opacity 1 
+		transition all .5s
+
+.tv-poster
+	position fixed
+	width 100%
+	height 100%
+	top 0
+	margin-top 65px
+	z-index 3
+	overflow hidden
+	background #17181b
+
+	.tv-cover
+		position relative
+		float left
+		margin-left 32px
+		margin-top 10px
+		width 135px
+		height 197px
+		box-shadow 0px 0px 10px
+		z-index 3
+		background-size 134px 197px
+		border-radius 4px
+
+	.tv-poster-background
+		position absolute
+		width 100%
+		height calc(100% - 65px)
+		z-index 1
+		background-repeat no-repeat
+		background-position center
+		opacity 0.5
+		background-size cover
+		display none
+
+		.tv-poster-overlay
+			position absolute
+			width 100%
+			height 100%
+			opacity .4
+			background-color #000
+			z-index 2
+
+.tv-meta-data
+	height 100%
+	width 100%
+	position absolute
+	
+	.tv-dot
+		position relative
+		z-index 3
+		margin 39.5px 15px 0 15px
+		float left
+		width 3px
+		height 3px
+		border-radius 2px
+		background-clip padding-box
+		background-color #dbdbdd
+		cursor default
+	
+	.tv-title
+		top 21px
+		left 198px
+		position relative
+		z-index 3
+		color #fff
+		width 452px
+		font-family 'Open Sans'
+		-webkit-font-smoothing antialiased
+		font-size 22px
+		
+	.tv-duration
+		margin-top 35px
+		position relative
+		margin-left 198px
+		float left
+		color #fff
+		width auto
+		height auto
+		font-family 'Open Sans Bold'
+		-webkit-font-smoothing antialiased
+		font-size 11px
+		cursor default
+		z-index 3
+		
+	.tv-genre
+		margin-top 35px
+		z-index 3
+		position relative
+		float left
+		color #fff
+		font-family 'Open Sans Bold'
+		-webkit-font-smoothing antialiased
+		font-size 11px
+		cursor default
+		
+	.tv-status
+		margin-top 35px
+		z-index 3
+		position relative
+		float left
+		color #fff
+		font-family 'Open Sans Bold'
+		-webkit-font-smoothing antialiased
+		font-size 11px
+		cursor default
+		
+	.tv-num-episodes
+		margin-top 35px
+		position relative
+		z-index 3
+		float left
+		color #fff
+		font-family: 'Open Sans Bold'
+		-webkit-font-smoothing antialiased
+		font-size 11px
+		cursor default
+		
+	.star-container-tv
+		z-index 3
+		position relative
+		opacity 1
+		float left
+		margin-top 33px
+
+		.tv-rating-star
+			position relative
+			z-index 2
+			width 11px
+			height 11px
+			opacity 1
+			background-image url('../images/icons/stars.png')
+			background-repeat no-repeat
+	
+			&.null
+				background-position: 0px 0px;
+			&.half
+				background-position: -11px 0px;
+			&.full
+				background-position: -22px 0px;
+
+	.tv-overview
+		margin-top 60px
+		margin-left 198px
+		z-index 3
+		position relative
+		color #fff
+		font-family 'Open Sans Semibold'
+		-webkit-font-smoothing: antialiased
+		font-size 12px
+		line-height 22px
+		max-width 78%
+
+.episode-base
+	margin-top 240px
+	
+	.season-episode-container
+		padding-top 50px
+
+.tabs-base
+	position absolute
+	width 100%
+	height 100%
+	background #17181b
+	z-index 3
+
+	ul
+		list-style none
+
+		li:nth-child(odd)
+			background-color #1F2025
+
+		li:hover
+			background #26272d
+			color #dfdcdc
+
+		li.active
+			background-color #1b2d4c
+			position relative
+
+			.watched
+				right 19px
+
+			&:after
+				content ""
+				position absolute
+				top 0px
+				right -12px
+				width 0
+				height 0
+				border-color transparent transparent transparent #1b2d4c
+				border-style solid
+				border-width 16px 6px 17px 6px
+
+.tabs-seasons
+	cursor pointer
+	margin-top 10px
+	margin-left 30px
+	padding-right: 12px
+	width: 13%
+	height: calc(100% - 350px)
+	display: inline-block
+	position relative
+	direction rtl
+	scrollable()
+	
+	ul
+		list-style none
+		color white
+		direction ltr
+
+		a
+			text-decoration none
+			color #707070
+			font-size 15px
+			font-weight normal
+			margin 10px 0px
+
+		li
+			padding 9px 15px 9px 15px
+			font-family sans-serif
+			font-size 15px
+			margin-left -10px
+			border-left 1px solid #17181B
+			margin 1px
+
+			a
+				color #fff
+
+		li.active span
+			right 11px
+			color white
+
+.tabs-episodes
+	position relative
+	z-index 2
+	color #fff
+	width: 48%
+	height calc(100% - 350px)
+	display: inline-block
+	direction rtl
+	scrollable()
+
+	.tab-episodes
+		display none
+		direction ltr
+		padding-right 6px
+
+	a
+		text-decoration none
+		color #fff
+		font-size 15px
+		font-weight normal
+		margin 10px 0px
+
+	.current
+		display block
+
+	ul
+		position relative
+		margin 0
+		list-style none
+		background #17181b
+
+		li
+			padding 0
+			min-width 360px
+			margin 1px
+			cursor pointer
+				
+			.watched
+				position absolute
+				right 20px
+				opacity 0.1
+				padding 10px 0
+
+				&:hover
+					opacity 0.4
+
+				img
+					width 20px
+					
+				&.true
+					opacity 1
+					
+			.episodeData
+				span
+					padding 9px 18px 9px 20px
+					font-weight 800
+
+					&:first-child
+						width 57px
+						display inline-block
+						border-right 1px solid #17181B
+						text-align right
+
+				div
+					color #8d9296
+					font-weight 100
+					padding-left 34px
+					display inline-block
+					max-width 80%
+					overflow hidden
+					white-space nowrap
+					text-overflow ellipsis
+					padding-bottom 3px
+					vertical-align -5px
+
+			&.active div
+				color white
+
+.display-base-title
+	width 100%
+	color #fff
+	height 60px
+	font-size 23px
+	padding 20px 0
+	position fixed
+	top 280px
+	z-index 3
+	background #17181b
+	
+	.episode-list-seasons
+		display inline-block
+		margin-left: 30px
+		width: 13%
+	
+	.episode-list-episodes
+		display inline-block
+
+.episode-info
+	background-color #1f2025
+	float right
+	width 44%
+	color #FFF
+	padding 20px 30px 30px 30px
+	height 100%
+	line-height initial
+	position fixed
+	margin-left auto
+	margin-right auto
+	right 0
+	z-index 4
+
+	p
+		font-size 22px
+		margin -22px 0 10px
+
+	.episode-info-title
+		display inline-block
+		font-size 23px
+		line-height 1
+		padding-bottom 3px
+		max-width 75%
+		overflow hidden
+		white-space nowrap
+		text-overflow ellipsis
+
+	.episode-info-number
+		font-weight 100
+		font-size 10px
+		line-height 1
+		color #8d9296
+		display inline
+		margin-left 3%
+		position absolute
+		top 33px
+
+	.episode-info-date
+		font-weight 100
+		font-size 12px
+		color #8d9296
+		margin-top 16px
+		margin-bottom 7px
+
+	.episode-info-description
+		font-size 13px
+		font-weight 100
+		line-height 20px
+		margin-top 10px
+		height calc(100% - 390px)
+		overflow-y auto
+		padding 10px 10px 10px 0
+		scrollable()
+
+	.movie-btn-watch-episode
+		right 30px
+		bottom 290px
+		z-index 2
+		position absolute
+		cursor pointer
+		padding 7px 15px
+		height 35px
+		font-weight 100
+		font-size 15px
+		border-radius 3px
+		background-clip padding-box
+		background-color #1F375F
+		transition background-color .5s
+
+		&:hover
+			background-color #225694
+
+	.show-quality-container
+		top: 40px
+		z-index: 2
+		float: left
+		width: 10px
+		height: 10px
+		position: relative
+		
+		div
+			font-family: "Open Sans Bold", "Open Sans", sans-serif;
+			-webkit-font-smoothing: antialiased;
+			font-size: 11px;
+			color: #fff;
+			font-weight: normal;
+			position: absolute;
+			z-index: 2;
+		
+		.quality-selector
+			display: none
+			
+			.q720
+				margin-left: 60px;
+			
+			.switch
+				top: 1px;
+				margin-left: 30px;
+		
+		.quality-info
+			display: none
+
+@media all and (min-width: 1300px)
+	.episode-info
+		width 46%
+
+	.tabs-episodes
+		width 38%
+
+@media all and (min-width: 700px) and (max-width: 1300px)
+	.episode-info
+		width 35%
+
+	.tabs-episodes
+		width 48%
+
+	.episode-info-title
+		font-size 18px
+
+	.episode-info-number
+		top 36px
